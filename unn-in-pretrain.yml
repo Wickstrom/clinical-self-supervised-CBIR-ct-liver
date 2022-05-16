@@ -1,0 +1,26 @@
+kind: Job
+apiVersion: batch/v1
+metadata:
+  name: unn-imagenet
+spec:
+  template:
+    spec:
+      containers:
+      - name: unn-imagenet
+        image: 'wickstrom91/xaitorch:v3'
+        workingDir: /storage/experiments/LiverDec
+        command: ["./unn-in-pretrain.sh"]
+        tty: true
+        stdin: true
+        volumeMounts:
+        - name: storage
+          mountPath: /storage
+        env:
+        - name: WANDB_API_KEY
+          value: 9606bb31e8712b4f5c579967b8eb55906d9d6631
+      volumes:
+      - name: storage
+        persistentVolumeClaim:
+          claimName: storage
+      restartPolicy: OnFailure
+  backoffLimit: 0
